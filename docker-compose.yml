@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  mongo:
+    container_name: mongo
+    image: mongo
+    volumes:
+      - ./docker_volumes/mongo/config/mongod.conf:/etc/mongod.conf
+      - ./docker_volumes/mongo/data:/data/db
+      - ./docker_volumes/mongo/scripts/rs-init.sh:/scripts/rs-init.sh
+    ports:
+      - 27017:27017
+    restart: always
+    entrypoint: ['/usr/bin/mongod', '--config', '/etc/mongod.conf']
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      # ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      # ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/
